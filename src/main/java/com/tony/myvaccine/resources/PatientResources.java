@@ -2,12 +2,12 @@ package com.tony.myvaccine.resources;
 
 import com.tony.myvaccine.domain.Patient;
 import com.tony.myvaccine.repository.PatientRepository;
+import com.tony.myvaccine.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/patients")
@@ -15,6 +15,8 @@ public class PatientResources {
 
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private PatientService patientService;
 
     @GetMapping
     public List<Patient> findAll() {
@@ -28,25 +30,29 @@ public class PatientResources {
 
     @PostMapping
     public Patient savePatient(@RequestBody Patient patient) {
-        return patientRepository.save(patient);
+        return patientService.savePatient(patient);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable("id") Long id, @RequestBody Patient patient) {
+    @PutMapping("/{idPatient}")
+    public ResponseEntity<Patient> updatePatient(@PathVariable Long idPatient, @RequestBody Patient patient) {
 
-        return patientRepository.findById(id).map(
-                x -> {
-                    x.setCpf(patient.getName());
-                    x.setCpf(patient.getCpf());
-                    x.setCpf(patient.getAge());
-                    x.setCpf(patient.getBirthDate());
-                    x.setCpf(patient.getPhone());
-                    x.setCpf(patient.getEmail());
+        if (!patientRepository.existsById(idPatient)) {
+            return ResponseEntity.notFound().build();
+        }
+        patient.setId(idPatient);
+        patient = patientService.savePatient(patient);
 
-                    Patient updatePatient = patientRepository.save(patient);
+        return ResponseEntity.ok(patient);
+    }
 
-                    return ResponseEntity.ok().body(updatePatient);
-                }
-        ).orElse(ResponseEntity.notFound().build());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Patient> deletePatient(@PathVariable("id") Long id) {
+        if (!patientRepository.existsById(id)) {
+            ResponseEntity.notFound().build();
+        }
+
+        patientService.removePatient(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
