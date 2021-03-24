@@ -4,10 +4,12 @@ import com.tony.myvaccine.domain.Patient;
 import com.tony.myvaccine.repository.PatientRepository;
 import com.tony.myvaccine.services.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/patients")
@@ -23,12 +25,17 @@ public class PatientResources {
         return patientRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public Patient findById(@PathVariable Long id) {
-        return patientRepository.findById(id).orElse(null);
+    @GetMapping("/{patientId}")
+    public ResponseEntity<Patient> findById(@PathVariable Long patientId) {
+        Optional<Patient> patient = patientRepository.findById(patientId);
+        if (patient.isPresent()) {
+            return ResponseEntity.ok(patient.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Patient savePatient(@RequestBody Patient patient) {
         return patientService.savePatient(patient);
     }
