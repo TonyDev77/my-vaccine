@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PriorityGroupsRepository extends JpaRepository<PriorityGroups, Long> {
+
+    PriorityGroups findByName(String name);
 }

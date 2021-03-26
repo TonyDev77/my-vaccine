@@ -34,6 +34,12 @@ public class PatientResources {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("group/{groupId}")
+    public List<Patient> findByGroup(@PathVariable Long groupId) {
+
+        return patientRepository.findByPriorityGroupsId(groupId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Patient savePatient(@RequestBody Patient patient) {

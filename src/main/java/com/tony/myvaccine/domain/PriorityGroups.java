@@ -1,12 +1,11 @@
 package com.tony.myvaccine.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "tb_priority_groups")
 public class PriorityGroups {
 
     @Id
@@ -15,6 +14,9 @@ public class PriorityGroups {
 
     private String name;
     private String Description;
+
+//    @OneToMany(mappedBy = "priorityGroups")
+//    private List<Patient> patients;
 
     public Long getId() {
         return id;
@@ -39,6 +41,14 @@ public class PriorityGroups {
     public void setDescription(String description) {
         Description = description;
     }
+
+//    public List<Patient> getPatients() {
+//        return patients;
+//    }
+//
+//    public void setPatients(List<Patient> patients) {
+//        this.patients = patients;
+//    }
 
     @Override
     public boolean equals(Object o) {

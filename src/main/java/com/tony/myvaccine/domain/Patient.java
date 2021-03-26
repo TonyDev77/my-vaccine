@@ -1,23 +1,29 @@
 package com.tony.myvaccine.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "tb_patient")
 public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String cpf;
     private String age;
     private String birthDate;
     private String phone;
     private String email;
+    private Boolean isVaccinated;
+
+    @ManyToOne
+    @JoinColumn(name = "priority_groups_id")
+    private PriorityGroups priorityGroups;
 
     public Long getId() {
         return id;
@@ -73,6 +79,23 @@ public class Patient {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getVaccinated() {
+        return isVaccinated;
+    }
+
+    public void setVaccinated(Boolean vaccinated) {
+        isVaccinated = vaccinated;
+    }
+
+//    @JsonIgnore
+    public PriorityGroups getPriorityGroups() {
+        return priorityGroups;
+    }
+
+    public void setPriorityGroups(PriorityGroups groups) {
+        this.priorityGroups = groups;
     }
 
     @Override
